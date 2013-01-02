@@ -1,13 +1,9 @@
 require "tencent_api/version"
+require "tencent_api/rest_api"
+require "tencent_api/config"
+require "tencent_api/user"
+require "tencent_api/relation"
 
 module TencentApi
-  METHODS = {}
 
-  class << self
-    def get_api name
-      if METHODS.member? name
-        METHODS[name].new
-      end
-    end
-  end
 end
