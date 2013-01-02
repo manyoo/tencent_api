@@ -13,8 +13,10 @@ module TencentApi
 
     REQUIRED = [:openid, :openkey, :pf]
 
-    def initialize
-      @name = '/v3/user/get_info'
+    def initialize name
+      @name = name
+      @base_url = PRODUCTION
+      @base_url = TESTING if Config.settings[:testing]
       @app_id = Config.settings[:app_id]
       @app_key = Config.settings[:app_key]
       @params = {:format => FORMAT,
@@ -46,6 +48,7 @@ module TencentApi
           raise ArgumentError, "#{f} is required for this API."
         end
       end
+      @params.merge! options
       sign
       url = URI.parse build_url
       res = Net::HTTP.get_response url
@@ -59,5 +62,10 @@ module TencentApi
         end
       end
     end
+  end
+
+  def self.get_remote method, options, &blocks
+    api = RestApi.new method
+    api.request options, &blocks
   end
 end
